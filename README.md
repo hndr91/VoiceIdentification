@@ -14,5 +14,6 @@ Run this following command
 ### To Do
 1. Detect voice activity automatically.
 Currently, the voice activity limited to the duration arguments.
-2. Combine with RFID as identifier
-3. Use AWS Polly and AWS Lex as voice user interface
+2. Voice identification still not implemented yet
+3. Combine with RFID as identifier
+4. Use AWS Polly and AWS Lex as voice user interface
