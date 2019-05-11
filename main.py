@@ -51,28 +51,25 @@ def trial_record(dur, subject, trial=5):
     return voice_list
 
 
-def trial_vad(voice_path_list):
-    vad_list = []
+def trial_vad(voice_path_list, subject):
 
     for i in range(0, len(voice_path_list)):
         path = voice_path_list[i]
         print(type(path))
-        vad = VoiceVad.get_vad(path)
-        vad_list.append(vad)
-
-    return vad_list
+        VoiceVad.get_vad(path, subject)
 
 
-def trial_model(vad_path_list):
-    for i in enumerate(vad_path_list):
-        ExtractFeatures.generate_model(i)
+# def trial_model(vad_path_list):
+#     for i in enumerate(vad_path_list):
+#         ExtractFeatures.generate_model(i)
 
 
 def main():
     duration, subject, trial = check_args(sys.argv[1:])
     voice = trial_record(duration, subject, trial)
-    vad = trial_vad(voice)
-    trial_vad(vad)
+    trial_vad(voice, subject)
+    vad_path = "vad/" + subject
+    ExtractFeatures.generate_model(vad_path)
 
 
 if __name__ == '__main__':

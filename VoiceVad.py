@@ -80,14 +80,14 @@ def vad_collector(sample_rate, frame_dur_ms,
         yield b''.join([f.bytes for f in voiced_frames])
 
 
-def get_vad(source_path):
+def get_vad(source_path, subject):
     """
     Extract VAD from audio source. Audio source should be match to WebRTC specification
 
     :param source_path: raw voice directory location. It should from raw/<subject>_<n_trial>.wav
-    :return: dest_path : VAD destination directory location. It should go to vad/<subject>/<subject>_<n_trial>.wav
+    :param subject: subject name
     """
-    subject_dir = re.findall(r"[\w']+", source_path)[1]
+    # subject_dir = re.findall(r"[\w']+", source_path)[1]
     fname = re.split("[/.]+", source_path)[1]
     audio, sr = read_wave(source_path)
     vad = webrtcvad.Vad(1)
@@ -96,7 +96,7 @@ def get_vad(source_path):
     segments = vad_collector(sr, 30, 300, vad, frames)
 
     vad_dir = 'vad/'
-    full_path = vad_dir + subject_dir + '/'
+    full_path = vad_dir + subject + '/'
 
     if not os.path.exists(vad_dir):
         os.makedirs(vad_dir)
@@ -111,10 +111,8 @@ def get_vad(source_path):
     #     write_wave(dest_path, segment, sr)
 
     # Expect only generated 1 VAD every voice record
-    dest_path = full_path + '%s.wav' % fname
-    print(' Writing %s' % dest_path)
-    write_wave(dest_path, next(segments), sr)
+    file_path = full_path + '%s.wav' % fname
+    print(' Writing %s' % file_path)
+    write_wave(file_path, next(segments, None), sr)
 
     print('extract vad is success!')
-
-    return dest_path

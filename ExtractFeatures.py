@@ -23,10 +23,15 @@ def extract_features(voice,rate,n=2):
 
 
 def generate_model(source_path):
-    # vad/<subject>/<subject_1.wav>
-    subject = re.split("[/.]+", source_path)[1]
-    subject_dir = subject[0] + "/" + subject[1] + "/"
-    file_list = glob.glob(subject_dir + "/*.wav")
+    """
+    Generate speaker model based on Gaussian Mixture Model using MFCC and delta MFCC features
+
+    :param source_path: vad source path. It should be from vad/<subject>
+
+    """
+    subject = source_path.split("/")[1]
+    # subject_dir = subject[0] + "/" + subject[1] + "/"
+    file_list = glob.glob(source_path + "/*.wav")
 
     model_dest = "model/" + subject + "/"
 
@@ -37,7 +42,7 @@ def generate_model(source_path):
 
     features = np.asarray(())
     for file in enumerate(file_list):
-        sr, audio = read(subject_dir+file)
+        sr, audio = read(file[1])
 
         fv = extract_features(audio, sr, 2)
 
